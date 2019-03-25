@@ -27,11 +27,26 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         ExecutorService thread_factory= Executors.newCachedThreadPool();
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str;
         boolean exit=true;
         int Capacity=100;
         Pr_Co_buffer buffer = new Pr_Co_buffer();
+        thread_factory.submit(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(buffer.getArraySize());
+                }
+
+            }
+        });
         Semaphore sem = new Semaphore(Capacity);
         while(exit){
         str=br.readLine();
