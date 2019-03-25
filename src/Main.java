@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Main {
     public enum choices{
@@ -26,28 +23,32 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        ExecutorService thread_factory= Executors.newCachedThreadPool();
+        int Capacity=100;
+        Semaphore sem = new Semaphore(Capacity);
 
+        ThreadPoolExecutor thread_factory= (ThreadPoolExecutor) Executors.newCachedThreadPool();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str;
-        boolean exit=true;
-        int Capacity=100;
+
+
         Pr_Co_buffer buffer = new Pr_Co_buffer();
+        ProductionAdaptativeController productioncontroller = new ProductionAdaptativeController(50,250,buffer);
         thread_factory.submit(new Runnable() {
             @Override
             public void run() {
                 while(true) {
                     try {
-                        Thread.sleep(1500);
+                        productioncontroller.start();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(buffer.getArraySize());
+
                 }
 
             }
         });
-        Semaphore sem = new Semaphore(Capacity);
+
+        boolean exit=true;
         while(exit){
         str=br.readLine();
         System.out.println(str);
@@ -58,9 +59,8 @@ public class Main {
                 System.out.println("Consumer added");
                break;
             }
-            case MINE:{break;}
             case PRODUCER:{
-                thread_factory.submit(() -> new Producer(buffer,sem,"cars").run());
+                thread_factory.submit(() -> new Producer(buffer,sem,"cars",productioncontroller).run());
                 System.out.println("Producer added");
                 break;
             }

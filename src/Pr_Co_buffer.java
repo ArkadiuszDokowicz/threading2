@@ -1,6 +1,10 @@
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class Pr_Co_buffer {
+    ////////////////////////////
+    volatile int producers=0;
+
+    ///////////////////////////
     public Pr_Co_buffer(){}
     private ArrayBlockingQueue<Product> queue = new ArrayBlockingQueue<Product>(100);
 
@@ -10,10 +14,18 @@ public class Pr_Co_buffer {
 
     synchronized public void put(Product x){
         //System.out.println("Product added");
-        queue.offer(x);
+        Boolean b =queue.offer(x);
+
     }
-    synchronized public void get(){
+    synchronized public Product get(){
        // System.out.println("Product taken");
-    queue.poll();
+    return queue.poll();
+    }
+    public void producerRegistration(){
+        producers++;
+    }
+
+    public int getProducers() {
+        return producers;
     }
 }
