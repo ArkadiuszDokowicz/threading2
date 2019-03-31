@@ -12,10 +12,10 @@ public class Pr_Co_buffer {
         return this.queue.size();
     }
 
-    synchronized public void put(Product x){
+    synchronized public Boolean put(Product x){
         //System.out.println("Product added");
         Boolean b =queue.offer(x);
-
+    return b;
     }
     synchronized public Product get(){
        // System.out.println("Product taken");

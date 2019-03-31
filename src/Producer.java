@@ -17,7 +17,10 @@ public class Producer implements Runnable {
         sem.acquire();
         Product p1=new Product(product_name);
         Thread.sleep(controller.getProductionSpeed());
-        buffer.put(p1);
+        if(buffer.put(p1)!=false){
+        this.controller.productedItemCounterIncrement();
+        }
+        else{System.out.println("queue is fully loaded");}
         }
     }
 
