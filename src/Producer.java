@@ -18,7 +18,7 @@ public class Producer implements Runnable {
         Product p1=new Product(product_name);
         Thread.sleep(controller.getProductionSpeed());
         if(buffer.put(p1)!=false){
-        this.controller.productedItemCounterIncrement();
+        this.controller.producedItemCounterIncrement();
         }
         else{System.out.println("queue is fully loaded");}
         }
